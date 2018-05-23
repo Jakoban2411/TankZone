@@ -13,11 +13,6 @@ ATank * ATankAIController::GetAITank()
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	if (GetPlayer())
-	{
-		ATankPlayerController* PlayerController = GetPlayer();
-		UE_LOG(LogTemp, Warning, TEXT("AI looking for %s"), *(PlayerController->GetName()))
-	}
 }
 
 void ATankAIController::Tick(float DeltaTime)
@@ -27,6 +22,7 @@ void ATankAIController::Tick(float DeltaTime)
 	if (GetPlayer())
 	{
 		AimAtPlayer();
+		GetAITank()->Fire();
 	}
 }
 

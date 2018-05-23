@@ -37,5 +37,8 @@ public:
 		void Fire();
 	UPROPERTY(EditAnywhere, Category = Setup)
 		TSubclassOf<AProjectile> Projectile;
-
+	UPROPERTY(EditAnywhere)
+		float LastLaunchTime = 0.f;
+	UPROPERTY(EditAnywhere)
+		double ReloadTime = 5;
 };

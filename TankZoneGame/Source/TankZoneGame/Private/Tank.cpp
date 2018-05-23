@@ -40,12 +40,19 @@ void ATank::SetComponentDelegates(UBarrelComponent * Barrel,UTankTurretComponent
 
 void ATank::Fire()
 {
-	UE_LOG(LogTemp,Warning,TEXT("FIRED!"))
-	if(!TankBarrel)
+	UE_LOG(LogTemp, Warning, TEXT("FIRED!"))
+		if (!TankBarrel)
+		{
+			return;
+		}
+	bool isReloaded = (FPlatformTime::Seconds() - LastLaunchTime) > ReloadTime;
+	if (isReloaded)
 	{
-		return;
+		AProjectile* LaunchProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, TankBarrel->GetSocketLocation(FName("Projectile")), TankBarrel->GetSocketRotation(FName("Projectile")));
+		LaunchProjectile->LaunchProjectile(LaunchSpeed);
+		LastLaunchTime = FPlatformTime::Seconds();
 	}
-	GetWorld()->SpawnActor<AProjectile>(Projectile, TankBarrel->GetSocketLocation(FName("Projectile")), TankBarrel->GetSocketRotation(FName("Projectile")));
+
 }
 
 

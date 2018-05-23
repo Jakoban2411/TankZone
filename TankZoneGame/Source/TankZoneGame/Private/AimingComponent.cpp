@@ -1,7 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AimingComponent.h"
-#include"Runtime/Engine/Classes/GameFramework/Actor.h"
+#include"TankTurretComponent.h"
+#include"BarrelComponent.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "Runtime/Engine/Classes/GameFramework/Actor.h"
+
+
+void UAimingComponent::MoveTurret(FVector AimLocation)
+{
+}
+
 // Sets default values for this component's properties
 UAimingComponent::UAimingComponent()
 {
@@ -11,26 +21,41 @@ UAimingComponent::UAimingComponent()
 	// ...
 }
 
-
-// Called when the game starts
-void UAimingComponent::BeginPlay()
+void UAimingComponent::AimingLog(FVector AimLocation,float LaunchSpeed)
 {
-	Super::BeginPlay();
-	// ...
+	if(!TankBarrel)
+	{
+		return;
+	}
+	FVector LaunchVelocity;
+	FVector StartLocation=TankBarrel->GetSocketLocation(FName("Projectile"));
+	if (UGameplayStatics::SuggestProjectileVelocity(this, LaunchVelocity, StartLocation, AimLocation, LaunchSpeed, false, 0.f, 0.f, ESuggestProjVelocityTraceOption::DoNotTrace))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s :Aim Solution found for %s"), *LaunchVelocity.GetSafeNormal().ToString(), *GetOwner()->GetName())
+		MoveAimTo(LaunchVelocity.GetSafeNormal());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No solution for %s"), *GetOwner()->GetName())
+	}
+
 }
 
-
-// Called every frame
-void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UAimingComponent::BarrelSetter(UBarrelComponent* Barrel)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	TankBarrel = Barrel;
 }
 
-void UAimingComponent::AimingLog(FVector AimLocation,FString TankName)
+void UAimingComponent::TurretSetter(UTankTurretComponent * Turret)
 {
-	if (GetOwner() != nullptr && GetOwner()!=NULL)
-	UE_LOG(LogTemp, Warning, TEXT("%s aiming at:%s "),*(GetOwner()->GetName()), *(AimLocation.ToString()));
+	TankTurret = Turret;
 }
 
+void UAimingComponent::MoveAimTo(FVector AimTurretto)
+{
+	FRotator AimRotator = AimTurretto.Rotation();
+	FRotator CurrentRotation = TankBarrel->GetForwardVector().Rotation();
+	FRotator DeltaRotation =AimRotator - CurrentRotation;;
+	TankTurret->AimTurret(DeltaRotation.Yaw);
+	TankBarrel->Elevate(DeltaRotation.Pitch);
+}

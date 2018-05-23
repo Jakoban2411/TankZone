@@ -2,7 +2,9 @@
 
 #include "TankAIController.h"
 #include"TankPlayerController.h"
+#include"Tank.h"
 #include"Engine/World.h"
+
 ATank * ATankAIController::GetAITank()
 {
 	return Cast<ATank>(GetPawn());

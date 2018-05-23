@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
+#include"Tank.h"
 #include"Runtime/Engine/Classes/Engine/World.h"
 
 ATank * ATankPlayerController::GetControlledTank()
@@ -21,21 +22,26 @@ void ATankPlayerController::BeginPlay()
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	AimTowardsCrossHair();
-	if (GetControlledTank())
+	FVector HitLocation;
+	if (AimTowardsCrossHair(HitLocation))
 	{
-		//GetControlledTank()->AimAt(HitLocation);
+		if (GetControlledTank())
+		{
+			GetControlledTank()->AimAt(HitLocation);
+		}
 	}
 }
 
-void ATankPlayerController::AimTowardsCrossHair()
+bool ATankPlayerController::AimTowardsCrossHair(FVector &HitLocation)
 {
 	
 	if (GetSightRayHitLocation(HitLocation))
 	{
+		return true;
 	}
 	else
 	UE_LOG(LogTemp, Warning, TEXT("Aim NOT Successfull"));
+	return false;
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation)
@@ -53,7 +59,6 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation)
 	}
 	return false;
 }
-
 bool ATankPlayerController::Raycast(FVector LookDirection, FVector& HitLocation)
 {
 	FHitResult HitResult;

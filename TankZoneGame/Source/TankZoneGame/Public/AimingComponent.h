@@ -5,22 +5,20 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "AimingComponent.generated.h"
-
+class UBarrelComponent;
+class UTankTurretComponent;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TANKZONEGAME_API UAimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
-public:	
+	UBarrelComponent* TankBarrel = nullptr;
+	UTankTurretComponent* TankTurret = nullptr;
+	void MoveTurret(FVector AimLocation);
+public:
 	// Sets default values for this component's properties
 	UAimingComponent();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void AimingLog(FVector AimLocation, FString TankName);
+	void AimingLog(FVector AimLocation, float LaunchSpeed);
+	void BarrelSetter(UBarrelComponent* Barrel);
+	void TurretSetter(UTankTurretComponent* Turrert);
+	void MoveAimTo(FVector AimTurretto);
 };

@@ -21,24 +21,18 @@ UAimingComponent::UAimingComponent()
 	// ...
 }
 
-void UAimingComponent::AimingLog(FVector AimLocation,float LaunchSpeed)
+void UAimingComponent::AimingLog(FVector AimLocation, float LaunchSpeed)
 {
-	if(!TankBarrel)
+	if (!TankBarrel)
 	{
 		return;
 	}
 	FVector LaunchVelocity;
-	FVector StartLocation=TankBarrel->GetSocketLocation(FName("Projectile"));
+	FVector StartLocation = TankBarrel->GetSocketLocation(FName("Projectile"));
 	if (UGameplayStatics::SuggestProjectileVelocity(this, LaunchVelocity, StartLocation, AimLocation, LaunchSpeed, false, 0.f, 0.f, ESuggestProjVelocityTraceOption::DoNotTrace))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s :Aim Solution found for %s"), *LaunchVelocity.GetSafeNormal().ToString(), *GetOwner()->GetName())
 		MoveAimTo(LaunchVelocity.GetSafeNormal());
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No solution for %s"), *GetOwner()->GetName())
-	}
-
 }
 
 void UAimingComponent::BarrelSetter(UBarrelComponent* Barrel)

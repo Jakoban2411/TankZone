@@ -40,7 +40,6 @@ bool ATankPlayerController::AimTowardsCrossHair(FVector &HitLocation)
 		return true;
 	}
 	else
-	UE_LOG(LogTemp, Warning, TEXT("Aim NOT Successfull"));
 	return false;
 }
 

@@ -25,8 +25,6 @@ protected:
 	virtual void BeginPlay() override;
 	UBarrelComponent* TankBarrel = nullptr;
 	UAimingComponent* TankAimingComponent = nullptr;
-	UPROPERTY(BlueprintReadOnly)
-	UTankMovementComponent* TankMovementComponent = nullptr;
 public:	
 	// Called every frame
 	// Called to bind functionality to input

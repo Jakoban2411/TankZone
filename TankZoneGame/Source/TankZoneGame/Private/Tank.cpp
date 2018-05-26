@@ -12,7 +12,6 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	TankAimingComponent = CreateDefaultSubobject<UAimingComponent>(TEXT("Tank Aiming Compoent"));
-	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(TEXT("Tank Movement Component"));
 }
 
 // Called when the game starts or when spawned
@@ -50,8 +49,11 @@ void ATank::Fire()
 	if (isReloaded)
 	{
 		AProjectile* LaunchedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, TankBarrel->GetSocketLocation(FName("Projectile")), TankBarrel->GetSocketRotation(FName("Projectile")));
-		LaunchedProjectile->LaunchProjectile(LaunchSpeed);
-		LastLaunchTime = FPlatformTime::Seconds();
+		if (LaunchedProjectile)
+		{
+			LaunchedProjectile->LaunchProjectile(LaunchSpeed);
+			LastLaunchTime = FPlatformTime::Seconds();
+		}
 	}
 
 }

@@ -13,6 +13,7 @@ UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TANKZONEGAME_API UTrackComponent : public UStaticMeshComponent
 {
 	GENERATED_BODY()
+public:
 	UFUNCTION(BlueprintCallable)
 	void TrackAccelerate(float Throttle);
 	UPROPERTY(EditAnywhere)

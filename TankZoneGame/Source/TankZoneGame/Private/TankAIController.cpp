@@ -21,6 +21,7 @@ void ATankAIController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (GetPlayer())
 	{
+		MoveToActor(GetPlayer()->GetControlledTank(), AcceptanceRadius);
 		AimAtPlayer();
 		GetAITank()->Fire();
 	}
@@ -35,7 +36,7 @@ void ATankAIController::AimAtPlayer()
 {
 	if (GetPlayer())
 	{
-		ATank* PlayerTank = GetPlayer()->GetControlledTank();
+		auto PlayerTank = GetPlayer()->GetControlledTank();
 		if (GetAITank())
 		{
 			GetAITank()->AimAt(PlayerTank->GetActorLocation());

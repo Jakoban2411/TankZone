@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
-
+class UAimingComponent;
 class ATank;
 /**
  * 
@@ -16,14 +16,16 @@ class TANKZONEGAME_API ATankPlayerController : public APlayerController
 
 	GENERATED_BODY()
 public:
-		ATank* GetControlledTank();
-		void BeginPlay() override;
-		void Tick(float DeltaTime) override;
-		bool AimTowardsCrossHair(FVector &HitLocation);
-		bool GetSightRayHitLocation(FVector &HitLocation);
-		float ScreenX = .5f;
-		float ScreenY = .33333f;
-		float ProjectileRange = 100000.f;
-		bool Raycast(FVector LookDirection,FVector& HitLocation);
+	UFUNCTION(BlueprintImplementableEvent)
+		void FoundAimingComponent(UAimingComponent* AimCompRef);
+	UAimingComponent* TankAimingComponent;
+	void BeginPlay() override;
+	void Tick(float DeltaTime) override;
+	bool AimTowardsCrossHair(FVector &HitLocation);
+	bool GetSightRayHitLocation(FVector &HitLocation);
+	float ScreenX = .5f;
+	float ScreenY = .33333f;
+	float ProjectileRange = 100000.f;
+	bool Raycast(FVector LookDirection,FVector& HitLocation);
 		
 };

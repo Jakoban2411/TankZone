@@ -5,6 +5,14 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "AimingComponent.generated.h"
+class AProjectile;
+UENUM()
+enum class EAimStatus : uint8
+{
+	RELOADING,
+	AIMING,
+	LOCKED
+};
 class UBarrelComponent;
 class UTankTurretComponent;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -13,12 +21,23 @@ class TANKZONEGAME_API UAimingComponent : public UActorComponent
 	GENERATED_BODY()
 	UBarrelComponent* TankBarrel = nullptr;
 	UTankTurretComponent* TankTurret = nullptr;
-	void MoveTurret(FVector AimLocation);
 public:
 	// Sets default values for this component's properties
+	UPROPERTY(BlueprintReadOnly)
+		EAimStatus FiringStatus = EAimStatus::RELOADING;
 	UAimingComponent();
-	void AimingLog(FVector AimLocation, float LaunchSpeed);
-	void BarrelSetter(UBarrelComponent* Barrel);
-	void TurretSetter(UTankTurretComponent* Turrert);
+	void AimingLog(FVector AimLocation);
+	UFUNCTION(BlueprintCallable)
+	void Initialise(UBarrelComponent* Barrel, UTankTurretComponent* Turret);
 	void MoveAimTo(FVector AimTurretto);
+	float LaunchSpeed = 8000.f;
+	UFUNCTION(BlueprintCallable)
+		void Fire();
+	UPROPERTY(EditAnywhere)
+		float LastLaunchTime = 0.f;
+	UPROPERTY(EditAnywhere)
+		double ReloadTime = 5;
+	UPROPERTY(EditAnywhere, Category = Setup)
+		TSubclassOf<AProjectile> Projectile;
+
 };

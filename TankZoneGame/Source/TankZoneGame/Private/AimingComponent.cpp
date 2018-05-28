@@ -6,12 +6,8 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/Actor.h"
-
-
-void UAimingComponent::MoveTurret(FVector AimLocation)
-{
-}
-
+#include"Projectile.h"
+#include"Runtime/Engine/Classes/Engine/World.h"
 // Sets default values for this component's properties
 UAimingComponent::UAimingComponent()
 {
@@ -21,7 +17,7 @@ UAimingComponent::UAimingComponent()
 	// ...
 }
 
-void UAimingComponent::AimingLog(FVector AimLocation, float LaunchSpeed)
+void UAimingComponent::AimingLog(FVector AimLocation)
 {
 	if (!TankBarrel)
 	{
@@ -35,14 +31,11 @@ void UAimingComponent::AimingLog(FVector AimLocation, float LaunchSpeed)
 	}
 }
 
-void UAimingComponent::BarrelSetter(UBarrelComponent* Barrel)
+void UAimingComponent::Initialise(UBarrelComponent* Barrel, UTankTurretComponent * Turret)
 {
 	TankBarrel = Barrel;
-}
-
-void UAimingComponent::TurretSetter(UTankTurretComponent * Turret)
-{
 	TankTurret = Turret;
+
 }
 
 void UAimingComponent::MoveAimTo(FVector AimTurretto)
@@ -52,4 +45,23 @@ void UAimingComponent::MoveAimTo(FVector AimTurretto)
 	FRotator DeltaRotation =AimRotator - CurrentRotation;;
 	TankTurret->AimTurret(DeltaRotation.Yaw);
 	TankBarrel->Elevate(DeltaRotation.Pitch);
+}
+
+void UAimingComponent::Fire()
+{
+	if (!ensure(TankBarrel))
+	{
+		return;
+	}
+	bool isReloaded = (FPlatformTime::Seconds() - LastLaunchTime) > ReloadTime;
+	if (isReloaded)
+	{
+		AProjectile* LaunchedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, TankBarrel->GetSocketLocation(FName("Projectile")), TankBarrel->GetSocketRotation(FName("Projectile")));
+		if (LaunchedProjectile)
+		{
+			LaunchedProjectile->LaunchProjectile(LaunchSpeed);
+			LastLaunchTime = FPlatformTime::Seconds();
+		}
+	}
+
 }

@@ -6,8 +6,8 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "TankAIController.generated.h"
-class ATank;
 class ATankPlayerController;
+class UAimingComponent;
 /**
  * 
  */
@@ -16,11 +16,11 @@ class TANKZONEGAME_API ATankAIController : public AAIController
 {
 	GENERATED_BODY()
 	
-	ATank* GetAITank();
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 	ATankPlayerController* GetPlayer();
 	void AimAtPlayer();
 	UPROPERTY(EditAnywhere)
 		float AcceptanceRadius = 3000.f;
+	UAimingComponent* TankAimingComponent = nullptr;
 };

@@ -17,9 +17,8 @@ void UTankMovementComponent::SetTracks(UTrackComponent * RightTrackToSet, UTrack
 void UTankMovementComponent::MoveRight(float direction)
 {
 	RightTrack->TrackAccelerate(direction);
-	LeftTrack->TrackAccelerate(0);		
+	LeftTrack->TrackAccelerate(-direction);		
 }
-
 void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed)
 {
 	FVector TankDirectionNormal = GetOwner()->GetActorForwardVector().GetSafeNormal();
@@ -27,5 +26,4 @@ void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, boo
 	MoveDirection(FVector::DotProduct(TankDirectionNormal, MoveRequestNormal));
 	auto RotationMove=FVector::CrossProduct(TankDirectionNormal, MoveRequestNormal);
 	MoveRight(RotationMove.Z);
-	
 }

@@ -1,21 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
-#include"Tank.h"
+#include"AimingComponent.h"
 #include"Runtime/Engine/Classes/Engine/World.h"
 
-ATank * ATankPlayerController::GetControlledTank()
-{
-		return Cast<ATank>(GetPawn());
-}
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	if (GetControlledTank())
+	if (GetPawn())
 	{
-		ATank* ControlledTank = GetControlledTank();
-		UE_LOG(LogTemp, Warning, TEXT("The Tank Possessed By Player Is %s"), *(ControlledTank->GetName()));
+		TankAimingComponent = GetPawn()->FindComponentByClass<UAimingComponent>();
+		if(TankAimingComponent)
+			FoundAimingComponent(TankAimingComponent);
 	}
 }
 
@@ -25,9 +22,9 @@ void ATankPlayerController::Tick(float DeltaTime)
 	FVector HitLocation;
 	if (AimTowardsCrossHair(HitLocation))
 	{
-		if (GetControlledTank())
+		if (GetPawn())
 		{
-			GetControlledTank()->AimAt(HitLocation);
+			TankAimingComponent->AimingLog(HitLocation);
 		}
 	}
 }

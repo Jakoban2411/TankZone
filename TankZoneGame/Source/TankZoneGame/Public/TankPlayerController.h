@@ -24,7 +24,7 @@ public:
 	bool AimTowardsCrossHair(FVector &HitLocation);
 	bool GetSightRayHitLocation(FVector &HitLocation);
 	float ScreenX = .5f;
-	float ScreenY = .33333f;
+	float ScreenY = .3333;
 	float ProjectileRange = 100000.f;
 	bool Raycast(FVector LookDirection,FVector& HitLocation);
 		

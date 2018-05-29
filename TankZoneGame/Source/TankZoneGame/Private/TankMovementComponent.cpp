@@ -4,8 +4,8 @@
 #include"TrackComponent.h"
 void UTankMovementComponent::MoveDirection(float direction)
 {
-	RightTrack->TrackAccelerate(direction);
-	LeftTrack->TrackAccelerate(direction);
+	RightTrack->SetThrottle(direction);
+	LeftTrack->SetThrottle(direction);
 }
 
 void UTankMovementComponent::SetTracks(UTrackComponent * RightTrackToSet, UTrackComponent * LeftTrackToSet)
@@ -16,14 +16,15 @@ void UTankMovementComponent::SetTracks(UTrackComponent * RightTrackToSet, UTrack
 
 void UTankMovementComponent::MoveRight(float direction)
 {
-	RightTrack->TrackAccelerate(direction);
-	LeftTrack->TrackAccelerate(-direction);		
+	RightTrack->SetThrottle(direction*1.35);
+	LeftTrack->SetThrottle(-direction*1.35);		
 }
 void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed)
 {
 	FVector TankDirectionNormal = GetOwner()->GetActorForwardVector().GetSafeNormal();
 	FVector MoveRequestNormal = MoveVelocity.GetSafeNormal();
-	MoveDirection(FVector::DotProduct(TankDirectionNormal, MoveRequestNormal));
-	auto RotationMove=FVector::CrossProduct(TankDirectionNormal, MoveRequestNormal);
-	MoveRight(RotationMove.Z);
+	auto ForwardThrow = FVector::DotProduct(TankDirectionNormal, MoveRequestNormal);
+	MoveDirection(ForwardThrow);
+	auto RotationMove=FVector::CrossProduct(TankDirectionNormal, MoveRequestNormal).Z;
+	MoveRight(RotationMove);
 }

@@ -18,7 +18,6 @@ class TANKZONEGAME_API ATankAIController : public AAIController
 	
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
-	ATankPlayerController* GetPlayer();
 	void AimAtPlayer();
 	UPROPERTY(EditAnywhere)
 		float AcceptanceRadius = 3000.f;

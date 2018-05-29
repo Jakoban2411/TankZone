@@ -21,6 +21,9 @@ class TANKZONEGAME_API UAimingComponent : public UActorComponent
 	GENERATED_BODY()
 	UBarrelComponent* TankBarrel = nullptr;
 	UTankTurretComponent* TankTurret = nullptr;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+	virtual void BeginPlay() override;
+	bool isBarrelMoving();
 public:
 	// Sets default values for this component's properties
 	UPROPERTY(BlueprintReadOnly)
@@ -39,5 +42,5 @@ public:
 		double ReloadTime = 5;
 	UPROPERTY(EditAnywhere, Category = Setup)
 		TSubclassOf<AProjectile> Projectile;
-
+	FVector AimedAt;
 };

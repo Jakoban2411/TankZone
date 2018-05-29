@@ -8,6 +8,7 @@
 #include "Runtime/Engine/Classes/GameFramework/Actor.h"
 #include"Projectile.h"
 #include"Runtime/Engine/Classes/Engine/World.h"
+
 // Sets default values for this component's properties
 UAimingComponent::UAimingComponent()
 {
@@ -15,6 +16,41 @@ UAimingComponent::UAimingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	// ...
+}
+void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+{
+	if ((FPlatformTime::Seconds() - LastLaunchTime) < ReloadTime)
+		FiringStatus = EAimStatus::RELOADING;
+	else
+	{
+		if (isBarrelMoving())
+		{
+			FiringStatus = EAimStatus::AIMING;
+		}
+		else
+		{
+			FiringStatus = EAimStatus::LOCKED;
+		}
+	}
+}
+
+void UAimingComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	LastLaunchTime = FPlatformTime::Seconds();
+}
+
+bool UAimingComponent::isBarrelMoving()
+{
+	FVector TankAim = TankBarrel->GetForwardVector();
+	if (TankAim.Equals(AimedAt, .1))
+	{
+			return false;
+	}
+	else
+		return true;
+
+
 }
 
 void UAimingComponent::AimingLog(FVector AimLocation)
@@ -27,7 +63,8 @@ void UAimingComponent::AimingLog(FVector AimLocation)
 	FVector StartLocation = TankBarrel->GetSocketLocation(FName("Projectile"));
 	if (UGameplayStatics::SuggestProjectileVelocity(this, LaunchVelocity, StartLocation, AimLocation, LaunchSpeed, false, 0.f, 0.f, ESuggestProjVelocityTraceOption::DoNotTrace))
 	{
-		MoveAimTo(LaunchVelocity.GetSafeNormal());
+		AimedAt = LaunchVelocity.GetSafeNormal();
+		MoveAimTo(AimedAt);
 	}
 }
 
@@ -53,8 +90,7 @@ void UAimingComponent::Fire()
 	{
 		return;
 	}
-	bool isReloaded = (FPlatformTime::Seconds() - LastLaunchTime) > ReloadTime;
-	if (isReloaded)
+	if (FiringStatus!=EAimStatus::RELOADING)
 	{
 		AProjectile* LaunchedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, TankBarrel->GetSocketLocation(FName("Projectile")), TankBarrel->GetSocketRotation(FName("Projectile")));
 		if (LaunchedProjectile)

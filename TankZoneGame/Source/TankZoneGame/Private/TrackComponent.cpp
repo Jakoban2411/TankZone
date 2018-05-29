@@ -25,18 +25,14 @@ void UTrackComponent::BeginPlay()
 
 void UTrackComponent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//Accelerate();
+	Accelerate();
 	ApplySidewaysForce();
 	CurrentThrottle = 0;
 }
 
 void UTrackComponent::SetThrottle(float Throttle)
 {
-
-	FVector ForceApplied = GetForwardVector()*Throttle*MaxDrivingForce;
-	FVector ForceLocation = GetComponentLocation();
-	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
+	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -1, 1);
 }
 
 void UTrackComponent::Accelerate()

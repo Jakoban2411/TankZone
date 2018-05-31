@@ -32,8 +32,12 @@ void UTrackComponent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 
 void UTrackComponent::SetThrottle(float Throttle)
 {
-	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -1, 1);
+	//CurrentThrottle += Throttle;
+	CurrentThrottle=FMath::Clamp<float>(CurrentThrottle + Throttle, -3, 3);
+	//Accelerate();
+	//CurrentThrottle = 0;
 }
+
 
 void UTrackComponent::Accelerate()
 {

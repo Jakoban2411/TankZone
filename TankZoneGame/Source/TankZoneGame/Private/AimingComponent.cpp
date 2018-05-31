@@ -25,7 +25,7 @@ void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	{
 		if (isBarrelMoving())
 		{
-			FiringStatus = EAimStatus::AIMING;
+			FiringStatus = EAimStatus::AIMING;	
 		}
 		else
 		{
@@ -49,8 +49,6 @@ bool UAimingComponent::isBarrelMoving()
 	}
 	else
 		return true;
-
-
 }
 
 void UAimingComponent::AimingLog(FVector AimLocation)
@@ -72,14 +70,15 @@ void UAimingComponent::Initialise(UBarrelComponent* Barrel, UTankTurretComponent
 {
 	TankBarrel = Barrel;
 	TankTurret = Turret;
-
 }
 
 void UAimingComponent::MoveAimTo(FVector AimTurretto)
 {
 	FRotator AimRotator = AimTurretto.Rotation();
 	FRotator CurrentRotation = TankBarrel->GetForwardVector().Rotation();
-	FRotator DeltaRotation =AimRotator - CurrentRotation;;
+	FRotator DeltaRotation =AimRotator - CurrentRotation;
+	if (DeltaRotation.Yaw > 180)//||DeltaRotation.Yaw <- 180)
+		DeltaRotation.Yaw = -(DeltaRotation.Yaw - 180);
 	TankTurret->AimTurret(DeltaRotation.Yaw);
 	TankBarrel->Elevate(DeltaRotation.Pitch);
 }
@@ -90,14 +89,29 @@ void UAimingComponent::Fire()
 	{
 		return;
 	}
-	if (FiringStatus!=EAimStatus::RELOADING)
+	if (Ammo != 0)
 	{
-		AProjectile* LaunchedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, TankBarrel->GetSocketLocation(FName("Projectile")), TankBarrel->GetSocketRotation(FName("Projectile")));
-		if (LaunchedProjectile)
+		if (FiringStatus != EAimStatus::RELOADING)
 		{
-			LaunchedProjectile->LaunchProjectile(LaunchSpeed);
-			LastLaunchTime = FPlatformTime::Seconds();
+			AProjectile* LaunchedProjectile = GetWorld()->SpawnActor<AProjectile>(Projectile, TankBarrel->GetSocketLocation(FName("Projectile")), TankBarrel->GetSocketRotation(FName("Projectile")));
+			if (LaunchedProjectile)
+			{
+				Ammo--;
+				LaunchedProjectile->LaunchProjectile(LaunchSpeed);
+				LastLaunchTime = FPlatformTime::Seconds();
+			}
 		}
 	}
+}
 
+EAimStatus UAimingComponent::CurrentAimStatus()
+{
+	return FiringStatus;
+}
+
+int UAimingComponent::AmmoCount()
+{
+	if (Ammo == 0)
+		FiringStatus = EAimStatus::NOAMMO;
+	return Ammo;
 }

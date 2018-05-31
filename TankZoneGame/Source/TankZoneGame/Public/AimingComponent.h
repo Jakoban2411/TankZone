@@ -11,7 +11,8 @@ enum class EAimStatus : uint8
 {
 	RELOADING,
 	AIMING,
-	LOCKED
+	LOCKED,
+	NOAMMO
 };
 class UBarrelComponent;
 class UTankTurretComponent;
@@ -33,6 +34,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Initialise(UBarrelComponent* Barrel, UTankTurretComponent* Turret);
 	void MoveAimTo(FVector AimTurretto);
+	UPROPERTY(EditDefaultsOnly)
 	float LaunchSpeed = 8000.f;
 	UFUNCTION(BlueprintCallable)
 		void Fire();
@@ -43,4 +45,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Setup)
 		TSubclassOf<AProjectile> Projectile;
 	FVector AimedAt;
+	EAimStatus CurrentAimStatus();
+	UFUNCTION(BlueprintCallable)
+	int AmmoCount();
+	UPROPERTY(EditAnywhere)
+	int Ammo = 5;
 };

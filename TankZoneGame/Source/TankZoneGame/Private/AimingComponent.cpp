@@ -77,7 +77,7 @@ void UAimingComponent::MoveAimTo(FVector AimTurretto)
 	FRotator AimRotator = AimTurretto.Rotation();
 	FRotator CurrentRotation = TankBarrel->GetForwardVector().Rotation();
 	FRotator DeltaRotation =AimRotator - CurrentRotation;
-	if (DeltaRotation.Yaw > 180)//||DeltaRotation.Yaw <- 180)
+	if (DeltaRotation.Yaw > 180||DeltaRotation.Yaw <- 180)
 		DeltaRotation.Yaw = -(DeltaRotation.Yaw - 180);
 	TankTurret->AimTurret(DeltaRotation.Yaw);
 	TankBarrel->Elevate(DeltaRotation.Pitch);

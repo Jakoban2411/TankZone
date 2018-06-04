@@ -51,6 +51,7 @@ bool UAimingComponent::isBarrelMoving()
 		return true;
 }
 
+
 void UAimingComponent::AimingLog(FVector AimLocation)
 {
 	if (!TankBarrel)

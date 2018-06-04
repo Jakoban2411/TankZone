@@ -18,7 +18,6 @@ class TANKZONEGAME_API ATankAIController : public AAIController
 	
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
-	void AimAtPlayer();
 	UPROPERTY(EditDefaultsOnly)
 		float AcceptanceRadius = 8000.f;
 	UAimingComponent* TankAimingComponent = nullptr;

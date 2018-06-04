@@ -7,35 +7,25 @@
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	TankAimingComponent = GetPawn()->FindComponentByClass<UAimingComponent>();
 }
 
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
+	TankAimingComponent = GetPawn()->FindComponentByClass<UAimingComponent>();
 	if (PlayerTank)
 	{
 		
 		MoveToActor(PlayerTank, AcceptanceRadius);
-		AimAtPlayer();
+		TankAimingComponent->AimingLog(PlayerTank->GetActorLocation());
 		if(TankAimingComponent->CurrentAimStatus()==EAimStatus::LOCKED)
 		TankAimingComponent->Fire();
 	}
 }
 
 
-void ATankAIController::AimAtPlayer()
-{
-	if (GetWorld()->GetFirstPlayerController()->GetPawn())
-	{
-		auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
-		if (GetPawn())
-		{
-			TankAimingComponent->AimingLog(PlayerTank->GetActorLocation());
-		}
-	}
-}
+
 
 void ATankAIController::OnTankDeath()
 {
@@ -44,7 +34,6 @@ void ATankAIController::OnTankDeath()
 
 void ATankAIController::SetPawn(APawn * InPawn)
 {
-
 	Super::SetPawn(InPawn);
 	if (InPawn)
 	{

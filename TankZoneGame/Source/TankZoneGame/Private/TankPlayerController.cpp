@@ -3,7 +3,7 @@
 #include "TankPlayerController.h"
 #include"AimingComponent.h"
 #include"Runtime/Engine/Classes/Engine/World.h"
-
+#include"Tank.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -67,4 +67,18 @@ bool ATankPlayerController::Raycast(FVector LookDirection, FVector& HitLocation)
 		return true;
 	}
 	return false;
+}
+
+void ATankPlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (!InPawn)
+		return;
+	ATank* PossessedTank = Cast<ATank>(InPawn);
+	PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnTankDeath);
+}
+
+void ATankPlayerController::OnTankDeath()
+{
+	UE_LOG(LogTemp, Warning, TEXT("I Died"))
 }

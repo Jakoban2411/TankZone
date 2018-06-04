@@ -8,6 +8,7 @@
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class UParticleSystemComponent;
+class URadialForceComponent;
 UCLASS()
 class TANKZONEGAME_API AProjectile : public AActor
 {
@@ -23,6 +24,8 @@ public:
 	UParticleSystemComponent* LaunchBlast = nullptr;
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent* ImpactBlast = nullptr;
+	UPROPERTY(VisibleAnywhere)
+	URadialForceComponent* RadialForce = nullptr;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -33,5 +36,11 @@ public:
 	void LaunchProjectile(float LaunchSpeed);
 	UFUNCTION()
 	void ProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-	
+	UFUNCTION()
+	void OnTimerExpire();
+	UPROPERTY(EditDefaultsOnly)
+	float DestroyDelay = 5.f;
+	UPROPERTY(EditDefaultsOnly)
+	float Damage = 50.f;
+
 };

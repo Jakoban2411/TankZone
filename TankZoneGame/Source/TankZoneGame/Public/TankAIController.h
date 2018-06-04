@@ -22,4 +22,8 @@ class TANKZONEGAME_API ATankAIController : public AAIController
 	UPROPERTY(EditDefaultsOnly)
 		float AcceptanceRadius = 8000.f;
 	UAimingComponent* TankAimingComponent = nullptr;
+	virtual void SetPawn(APawn* InPawn) override;
+	UFUNCTION()
+		void OnTankDeath();
+
 };

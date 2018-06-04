@@ -14,6 +14,22 @@ void ATank::BeginPlay()
 	Super::BeginPlay();
 }
 
+float ATank::GetHealthPercent() const
+{
+	return (float)CurrentHealth/(float)StartingHealth;
+}
+
+
+float ATank::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	int32 DamageToApply = FMath::RoundToInt(Damage);
+	DamageToApply = FMath::Clamp(DamageToApply, 0, CurrentHealth);
+	CurrentHealth -= DamageToApply;
+	if (CurrentHealth <= 0)
+		OnDeath.Broadcast();
+	return DamageToApply;
+}
+
 
 
 

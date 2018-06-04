@@ -27,5 +27,7 @@ public:
 	float ScreenY = .3333;
 	float ProjectileRange = 100000.f;
 	bool Raycast(FVector LookDirection,FVector& HitLocation);
-		
+	virtual void SetPawn(APawn* InPawn) override;
+	UFUNCTION()
+		void OnTankDeath();
 };

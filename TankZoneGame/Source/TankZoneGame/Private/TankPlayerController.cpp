@@ -61,7 +61,7 @@ bool ATankPlayerController::Raycast(FVector LookDirection, FVector& HitLocation)
 	FHitResult HitResult;
 	FVector Start = PlayerCameraManager->GetCameraLocation();
 	FVector End = Start + LookDirection * ProjectileRange;
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_Visibility))
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_Camera))
 	{
 		HitLocation = HitResult.Location;
 		return true;
@@ -80,5 +80,5 @@ void ATankPlayerController::SetPawn(APawn * InPawn)
 
 void ATankPlayerController::OnTankDeath()
 {
-	UE_LOG(LogTemp, Warning, TEXT("I Died"))
+	StartSpectatingOnly();
 }

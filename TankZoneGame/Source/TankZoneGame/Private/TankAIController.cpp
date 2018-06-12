@@ -29,7 +29,7 @@ void ATankAIController::Tick(float DeltaTime)
 
 void ATankAIController::OnTankDeath()
 {
-	UE_LOG(LogTemp,Warning,TEXT("Some AI died"))
+
 }
 
 void ATankAIController::SetPawn(APawn * InPawn)

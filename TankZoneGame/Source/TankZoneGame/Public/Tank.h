@@ -23,7 +23,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32  StartingHealth=100;
 	UPROPERTY(VisibleAnywhere)
-	int32 CurrentHealth = StartingHealth;
+	int32 CurrentHealth ;
 	UFUNCTION(BlueprintPure)
 	float GetHealthPercent() const; 
 };

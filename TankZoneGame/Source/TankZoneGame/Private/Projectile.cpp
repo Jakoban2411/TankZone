@@ -13,6 +13,7 @@ AProjectile::AProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	
 	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Projectile Mesh Component"));
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement"));
 	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
@@ -50,9 +51,11 @@ void AProjectile::ProjectileHit(UPrimitiveComponent * HitComponent, AActor * Oth
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
 	RadialForce->FireImpulse();
+	SetRootComponent(ImpactBlast);
+	CollisionMesh->DestroyComponent();
+	UGameplayStatics::ApplyRadialDamage(this, Damage, GetActorLocation(), RadialForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
 	FTimerHandle TimeHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimeHandle, this, &AProjectile::OnTimerExpire, DestroyDelay);
-	UGameplayStatics::ApplyRadialDamage(this, Damage, GetActorLocation(), RadialForce->Radius, UDamageType::StaticClass(), TArray<AActor*>());
 }
 
 void AProjectile::OnTimerExpire()

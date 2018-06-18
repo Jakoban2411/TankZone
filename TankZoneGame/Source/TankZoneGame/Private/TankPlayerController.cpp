@@ -80,5 +80,7 @@ void ATankPlayerController::SetPawn(APawn * InPawn)
 
 void ATankPlayerController::OnTankDeath()
 {
+	GetPawn()->DetachFromControllerPendingDestroy();
 	StartSpectatingOnly();
+	Destroy();
 }

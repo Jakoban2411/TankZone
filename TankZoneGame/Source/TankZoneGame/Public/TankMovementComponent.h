@@ -6,6 +6,7 @@
 #include "GameFramework/NavMovementComponent.h"
 #include "TankMovementComponent.generated.h"
 class UTrackComponent;
+class ASuspensionWheel;
 /**
  * 
  */
@@ -23,5 +24,6 @@ public:
 	UTrackComponent* RightTrack;
 	UTrackComponent* LeftTrack;
 	virtual void RequestDirectMove(const FVector &MoveVelocity, bool bForceMaxSpeed) override;
+	
 	//TODO add a function to rotate tank body when space is pressed
 };

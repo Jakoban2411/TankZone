@@ -19,6 +19,11 @@ UAimingComponent::UAimingComponent()
 }
 void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
+	if (Ammo<= 0)
+	{
+		FiringStatus = EAimStatus::NOAMMO;
+	}
+	else
 	if ((FPlatformTime::Seconds() - LastLaunchTime) < ReloadTime)
 		FiringStatus = EAimStatus::RELOADING;
 	else
@@ -43,7 +48,7 @@ void UAimingComponent::BeginPlay()
 bool UAimingComponent::isBarrelMoving()
 {
 	FVector TankAim = TankBarrel->GetForwardVector();
-	if (TankAim.Equals(AimedAt, .1))
+	if (TankAim.Equals(AimedAt, .01))
 	{
 			return false;
 	}
@@ -112,7 +117,5 @@ EAimStatus UAimingComponent::CurrentAimStatus()
 
 int UAimingComponent::AmmoCount()
 {
-	if (Ammo == 0)
-		FiringStatus = EAimStatus::NOAMMO;
 	return Ammo;
 }

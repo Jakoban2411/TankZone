@@ -29,7 +29,6 @@ float ATank::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AControl
 	if (CurrentHealth <= 0)
 	{
 		OnDeath.Broadcast();
-		DetachFromControllerPendingDestroy();
 		Destroy();
 	}
 	return DamageToApply;

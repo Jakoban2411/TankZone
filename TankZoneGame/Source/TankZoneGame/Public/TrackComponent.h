@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
 #include "TrackComponent.generated.h"
-
+class ASuspensionWheel;
 /**
  * 
  */
@@ -14,15 +14,9 @@ class TANKZONEGAME_API UTrackComponent : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 		UTrackComponent();
-	void ApplySidewaysForce();
-	virtual void BeginPlay() override;
-	UFUNCTION()
-	void OnHit( UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 public:
-	UFUNCTION(BlueprintCallable)
-	void SetThrottle(float Throttle);
-	void Accelerate();
-	UPROPERTY(EditAnywhere)
-		float MaxDrivingForce = 40000.f;
+	
+	void Accelerate(float Throttle);
 	float CurrentThrottle = 0;
+	TArray<ASuspensionWheel*> GetWheels() const;
 };

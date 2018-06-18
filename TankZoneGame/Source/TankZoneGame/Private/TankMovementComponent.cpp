@@ -4,8 +4,9 @@
 #include"TrackComponent.h"
 void UTankMovementComponent::MoveDirection(float direction)
 {
-	RightTrack->SetThrottle(direction);
-	LeftTrack->SetThrottle(direction);
+	RightTrack->Accelerate(direction*25);
+	LeftTrack->Accelerate(direction*25);
+	
 }
 
 void UTankMovementComponent::SetTracks(UTrackComponent * RightTrackToSet, UTrackComponent * LeftTrackToSet)
@@ -16,8 +17,8 @@ void UTankMovementComponent::SetTracks(UTrackComponent * RightTrackToSet, UTrack
 
 void UTankMovementComponent::MoveRight(float direction)
 {
-	RightTrack->SetThrottle(direction*1.35);
-	LeftTrack->SetThrottle(-direction*1.35);		
+	RightTrack->Accelerate(direction*25);
+	LeftTrack->Accelerate(-direction*25);
 }
 void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed)
 {

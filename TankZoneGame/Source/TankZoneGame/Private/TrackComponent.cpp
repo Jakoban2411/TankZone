@@ -2,47 +2,41 @@
 
 #include "TrackComponent.h"
 #include"Engine/World.h"
+#include"SuspensionWheel.h"
+#include"SpawnSuspensionComponent.h"
 UTrackComponent::UTrackComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UTrackComponent::ApplySidewaysForce()
+
+void UTrackComponent::Accelerate(float Throttle)
 {
-	float Slippage = FVector::DotProduct(GetRightVector(), GetComponentVelocity());
-	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	FVector CorrectionVector = (-Slippage / DeltaTime) * GetRightVector();
-	auto TankRoot = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
-	auto CorrectionForce = (TankRoot->GetMass()*CorrectionVector) / 2;
-	TankRoot->AddForce(CorrectionForce);
+	auto Wheels = GetWheels();
+	for (ASuspensionWheel* Wheel : Wheels)
+	{
+		Wheel->AddDrivingForce(Throttle);
+	}
 }
 
-void UTrackComponent::BeginPlay()
+TArray<ASuspensionWheel*> UTrackComponent::GetWheels() const
 {
-	Super::BeginPlay();
-	OnComponentHit.AddDynamic(this,&UTrackComponent::OnHit);
-}
 
-void UTrackComponent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	Accelerate();
-	ApplySidewaysForce();
-	CurrentThrottle = 0;
-}
-
-void UTrackComponent::SetThrottle(float Throttle)
-{
-	//CurrentThrottle += Throttle;
-	CurrentThrottle=FMath::Clamp<float>(CurrentThrottle + Throttle, -3, 3);
-	//Accelerate();
-	//CurrentThrottle = 0;
-}
-
-
-void UTrackComponent::Accelerate()
-{
-	FVector ForceApplied = GetForwardVector()*CurrentThrottle*MaxDrivingForce;
-	FVector ForceLocation = GetComponentLocation();
-	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
+	TArray<USceneComponent*> Children;
+	TArray<ASuspensionWheel*> Wheels;
+	GetChildrenComponents(false, Children);
+	for (USceneComponent* Child : Children)
+	{
+		if (Cast<USpawnSuspensionComponent>(Child))
+		{
+			USpawnSuspensionComponent* CastedChild = Cast<USpawnSuspensionComponent>(Child);
+			AActor* WheelChild=CastedChild->ReturnChild();
+			if (Cast<ASuspensionWheel>(WheelChild))
+			{
+				auto Wheel = Cast<ASuspensionWheel>(WheelChild);
+				Wheels.Add(Wheel);
+			}
+		}
+	}
+	return Wheels;
 }
